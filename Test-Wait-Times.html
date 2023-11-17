@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
+      crossorigin="anonymous"
+    />
+
+    <title>Wait Times</title>
+
+    <script
+      src="https://code.jquery.com/jquery-3.6.0.slim.min.js"
+      integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI="
+      crossorigin="anonymous"
+    ></script>
+    <script src="clockwise-api.js"></script>
+  </head>
+  <body>
+    <script>
+      $(function () {
+        collectLocationsInfo(layoutHospitals);
+      });
+
+      function layoutHospitals() {
+        for (var i = 0; i < CW_HOSPITALS.length; i++) {
+          let hospital = CW_HOSPITALS[i];
+
+          let colElem = document.createElement("div");
+          colElem.classList.add("col-6");
+
+          let nameElem = document.createElement("h1");
+          nameElem.textContent = hospital.hShortName;
+
+          let addressElem = document.createElement("h3");
+          addressElem.textContent = hospital.hAddress;
+
+          let waitElem = document.createElement("h3");
+          waitElem.textContent =
+            hospital.currentWait === "N/A"
+              ? "Currently Closed"
+              : `${hospital.currentWait} minutes`;
+
+          colElem.appendChild(nameElem);
+          colElem.appendChild(addressElem);
+          colElem.appendChild(waitElem);
+
+          for (var j = 0; j < hospital.availableTimes.length; j++) {
+            let time = hospital.availableTimes[j];
+
+            let timeElem = document.createElement("a");
+            timeElem.textContent = time.displayTime;
+            timeElem.href = time.link;
+
+            colElem.appendChild(timeElem);
+
+            let spaceElem = document.createElement("span");
+            spaceElem.textContent = " ";
+            colElem.appendChild(spaceElem);
+          }
+
+          document.getElementById("hospital-container").appendChild(colElem);
+        }
+      }
+    </script>
+
+    <div class="container">
+      <div id="hospital-container" class="row"></div>
+    </div>
+
+    <!-- Option 1: Bootstrap Bundle with Popper -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>
